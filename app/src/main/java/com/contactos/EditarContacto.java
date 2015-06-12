@@ -137,8 +137,6 @@ public class EditarContacto extends Activity implements LocationListener {
                 dialogo.show();
             }
         });
-
-
     }
 
     @Override
