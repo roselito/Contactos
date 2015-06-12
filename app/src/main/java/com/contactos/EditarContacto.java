@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class EditarContacto extends Activity implements LocationListener {
 
@@ -105,6 +111,22 @@ public class EditarContacto extends Activity implements LocationListener {
                 String mensagem = "Contacto:" + c.getNome();
                 if (loc != null) {
                     mensagem += " loc: " + loc.getLatitude() + "," + loc.getLongitude();
+                    Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
+                    List<Address> addresses;
+                    try {
+                        addresses = gcd.getFromLocation(loc.getLatitude(),
+                                loc.getLongitude(), 1);
+                        if (addresses.size() > 0) {
+                            System.out.println("##################################");
+                            System.out.println(addresses.get(0).getLocality());
+                            System.out.println(addresses.get(0).getFeatureName());
+                            System.out.println(addresses.get(0).getThoroughfare());
+                            System.out.println("##################################");
+                        }
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 System.out.println("--------------------------------------");
                 System.out.println(mensagem);
