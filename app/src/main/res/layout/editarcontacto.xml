@@ -3,55 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nome:" />
-
     <EditText
         android:id="@+editarcontacto/ednome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <requestFocus />
     </EditText>
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email" />
-
     <EditText
         android:id="@+editarcontacto/edEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Telefone" />
-
     <EditText
         android:id="@+editarcontacto/edTelefone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <Button
             android:id="@+editarcontacto/tirarFoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="tirar fotografia" />
-
         <Button
             android:id="@+editarcontacto/btadicionar"
             android:layout_width="wrap_content"
