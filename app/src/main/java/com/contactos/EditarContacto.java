@@ -6,13 +6,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-public class EditarContacto extends Activity {
+public class EditarContacto extends Activity implements LocationListener {
+
+    // The minimum distance to change updates in metters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 metters
+    // The minimum time beetwen updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
     final static int cameraData = 0;
     int idContacto;
@@ -23,7 +31,10 @@ public class EditarContacto extends Activity {
     EditText edtEmail;
     EditText edtTelefone;
     ImageView iv;
-    private DBAdapter datasource;
+    DBAdapter datasource;
+    Location loc = null;
+    LocationManager locationManager = null;
+    String provider = "";
 
     public static Bitmap loadBitmapFromView(View v) {
         Bitmap b = Bitmap.createBitmap(v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
@@ -55,6 +66,24 @@ public class EditarContacto extends Activity {
                 startActivityForResult(i, cameraData);
             }
         });
+        Boolean gps = false, rede = false;
+        loc = null;
+        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        rede = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        provider = "";
+        if (gps) {
+            provider = LocationManager.GPS_PROVIDER;
+        } else {
+            if (rede) {
+                provider = LocationManager.NETWORK_PROVIDER;
+            }
+        }
+        if (!provider.equals("")) {
+            locationManager.requestLocationUpdates(
+                    provider, MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        }
 
         btadicionar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -62,17 +91,31 @@ public class EditarContacto extends Activity {
                 datasource.open();
                 Contacto c = datasource.updateContacto(idContacto, edtNome.getText().toString(), edtEmail.getText().toString(), edtTelefone.getText().toString(), loadBitmapFromView(iv));
                 datasource.close();
+
+                if (locationManager != null) {
+                    if (!provider.equals("")) {
+                        System.out.println("LocationManager:" + locationManager);
+                        loc = locationManager
+                                .getLastKnownLocation(provider);
+                    }
+                }
                 AlertDialog.Builder dialogo = new
                         AlertDialog.Builder(EditarContacto.this);
-                dialogo.setTitle("Aviso");
-                dialogo.setMessage("Contacto:" + c.getNome());
+                dialogo.setTitle("Gravado");
+                String mensagem = "Contacto:" + c.getNome();
+                if (loc != null) {
+                    mensagem += " loc: " + loc.getLatitude() + "," + loc.getLongitude();
+                }
+                System.out.println("--------------------------------------");
+                System.out.println(mensagem);
+                System.out.println("--------------------------------------");
+                dialogo.setMessage(mensagem);
                 dialogo.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
                     }
                 });
                 dialogo.show();
-                finish();
             }
         });
 
@@ -104,6 +147,18 @@ public class EditarContacto extends Activity {
         edtTelefone.setText(contacto.getTelefone());
     }
 
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    public void onProviderDisabled(String provider) {
+    }
+
+    public void onProviderEnabled(String provider) {
+    }
+
+    public void onLocationChanged(Location location) {
+    }
 }
 
 
