@@ -110,7 +110,7 @@ public class EditarContacto extends Activity implements LocationListener {
                 dialogo.setTitle("Gravado");
                 String mensagem = "Contacto:" + c.getNome();
                 if (loc != null) {
-                    mensagem += "\nloc: " + loc.getLatitude() + "," + loc.getLongitude();
+                    mensagem += "loc: " + loc.getLatitude() + "," + loc.getLongitude();
                     Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
                     List<Address> addresses;
                     try {
@@ -118,7 +118,7 @@ public class EditarContacto extends Activity implements LocationListener {
                                 loc.getLongitude(), 1);
                         if (addresses.size() > 0) {
                             System.out.println("##################################");
-                            mensagem +=  "\nCidade:" + addresses.get(0).getLocality();
+                            mensagem +=  "Cidade:" + addresses.get(0).getLocality();
                             System.out.println(addresses.get(0).getLocality());
                             System.out.println(addresses.get(0).getFeatureName());
                             System.out.println(addresses.get(0).getThoroughfare());
